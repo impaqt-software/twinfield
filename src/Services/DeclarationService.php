@@ -114,7 +114,7 @@ class DeclarationService extends BaseService
     {
         // note $this->{function_name} is the SOAP function that should exist in the WSDL
 
-        return $this->SetToSent([
+        return $this->SetToRejected([
             'DocumentId' => $documentId,
             'Reason' => $reason
         ]);
