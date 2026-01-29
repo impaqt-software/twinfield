@@ -81,6 +81,16 @@ class DeclarationService extends BaseService
         ]);
     }
 
+    public function getDeclarationsSinceModified($officeCode, \DateTime $modifiedSince, int $skip = 0, int $take = 50): \stdClass
+    {
+        return $this->GetRangeOfSummariesSinceModified([
+            'companyCode' => $officeCode,
+            'startIndex' => $skip,
+            'count' => $take,
+            'modifiedSince' => $modifiedSince->format('Y-m-d\TH:i:s'),
+        ]);
+    }
+
     public function vatReturnXbrl($documentId)
     {
         // note $this->{function_name} is the SOAP function that should exist in the WSDL
