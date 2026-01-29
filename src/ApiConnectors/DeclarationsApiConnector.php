@@ -47,6 +47,16 @@ class DeclarationsApiConnector extends BaseApiConnector
         return $this->processDeclarations($response);
     }
 
+    public function getDeclarationsSinceModified($officeCode, \DateTime $modifiedSince, int $skip = 0, int $take = 50): array
+    {
+        // this seems redundant, but it is necessary to set the office code
+        $this->setOffice($officeCode);
+
+        $response = $this->getDeclarationService()->getDeclarationsSinceModified($officeCode, $modifiedSince, $skip, $take);
+
+        return $this->processDeclarations($response);
+    }
+
     public function getDeclarationsByYearAndSinceModified($officeCode, \DateTime $modifiedSince, $declarationYear = null, int $skip = 0, int $take = 50): array
     {
         // this seems redundant, but it is necessary to set the office code
