@@ -27,14 +27,14 @@ class DeclarationsApiConnector extends BaseApiConnector
     {
         $response = $this->getDeclarationService()->vatReturnXbrl($documentId);
 
-        return $response->vatReturn->any ?? null;
+        return $response->VatReturn->any ?? null;
     }
 
     public function icpReturnXBrl($documentId): string|null
     {
         $response = $this->getDeclarationService()->icpReturnXbrl($documentId);
 
-        return $response->vatReturn->any ?? null;
+        return $response->VatReturn->any ?? null;
     }
 
     public function summaries($officeCode, $declarationYear = null): array
@@ -69,11 +69,11 @@ class DeclarationsApiConnector extends BaseApiConnector
 
     private function processDeclarations(\stdClass $response): array
     {
-        if (!isset($response->vatReturn->DeclarationSummary)) {
+        if (!isset($response->VatReturn->DeclarationSummary)) {
             return [];
         }
 
-        $declarations = $response->vatReturn->DeclarationSummary;
+        $declarations = $response->VatReturn->DeclarationSummary;
 
         // If there are multiple declarations, map them all
         if (is_array($declarations)) {
