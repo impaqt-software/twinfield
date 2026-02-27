@@ -45,8 +45,9 @@ class DeclarationsApiConnector extends BaseApiConnector
     public function taxGroupReturnXBrl($documentId): string|null
     {
         $response = $this->getDeclarationService()->taxGroupVatReturnXbrl($documentId);
+        $vatReturn = $this->getVatReturnResponse($response);
 
-        return $response->vatReturn->any ?? null;
+        return $vatReturn?->any ?? null;
     }
 
     public function summaries($officeCode, $declarationYear = null): array
