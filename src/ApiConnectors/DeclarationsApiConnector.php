@@ -3,6 +3,7 @@
 namespace PhpTwinfield\ApiConnectors;
 
 use PhpTwinfield\Mappers\DocumentMapper;
+use stdClass;
 
 class DeclarationsApiConnector extends BaseApiConnector
 {
@@ -27,14 +28,18 @@ class DeclarationsApiConnector extends BaseApiConnector
     {
         $response = $this->getDeclarationService()->vatReturnXbrl($documentId);
 
-        return $response->vatReturn->any ?? null;
+        $vatReturn = $this->getVatReturnResponse($response);
+
+        return $vatReturn?->any ?? null;
     }
 
     public function icpReturnXBrl($documentId): string|null
     {
         $response = $this->getDeclarationService()->icpReturnXbrl($documentId);
 
-        return $response->vatReturn->any ?? null;
+        $vatReturn = $this->getVatReturnResponse($response);
+
+        return $vatReturn?->any ?? null;
     }
 
     public function taxGroupReturnXBrl($documentId): string|null
@@ -74,13 +79,15 @@ class DeclarationsApiConnector extends BaseApiConnector
         return $this->processDeclarations($response);
     }
 
-    private function processDeclarations(\stdClass $response): array
+    private function processDeclarations(stdClass $response): array
     {
-        if (!isset($response->vatReturn->DeclarationSummary)) {
+        $vatReturn = $this->getVatReturnResponse($response);
+
+        if (!is_object($vatReturn) || !isset($vatReturn->DeclarationSummary)) {
             return [];
         }
 
-        $declarations = $response->vatReturn->DeclarationSummary;
+        $declarations = $vatReturn->DeclarationSummary;
 
         // If there are multiple declarations, map them all
         if (is_array($declarations)) {
@@ -91,6 +98,13 @@ class DeclarationsApiConnector extends BaseApiConnector
 
         // With XML, if there is only one declaration, it is not an array
         return [DocumentMapper::map($declarations)];
+    }
+
+    private function getVatReturnResponse(stdClass $response): ?stdClass
+    {
+        $vatReturn = $response->vatReturn ?? $response->VatReturn ?? null;
+
+        return is_object($vatReturn) ? $vatReturn : null;
     }
 
     public function setApproved($officeCode, $documentId): bool
