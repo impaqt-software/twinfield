@@ -111,6 +111,16 @@ class DeclarationService extends BaseService
         ]);
     }
 
+    public function taxGroupVatReturnXbrl($documentId)
+    {
+        // note $this->{function_name} is the SOAP function that should exist in the WSDL
+
+        return $this->GetTaxGroupVatReturnAsXbrl([
+            'documentId' => $documentId,
+            'isMessageIdRequired' => true // If set to True the MessageReferenceSupplierVAT element will be filled in. Which is required for sending the item to logius
+        ]);
+    }
+
     public function setApproved($documentId)
     {
         // note $this->{function_name} is the SOAP function that should exist in the WSDL

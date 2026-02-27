@@ -42,6 +42,14 @@ class DeclarationsApiConnector extends BaseApiConnector
         return $vatReturn?->any ?? null;
     }
 
+    public function taxGroupReturnXBrl($documentId): string|null
+    {
+        $response = $this->getDeclarationService()->taxGroupVatReturnXbrl($documentId);
+        $vatReturn = $this->getVatReturnResponse($response);
+
+        return $vatReturn?->any ?? null;
+    }
+
     public function summaries($officeCode, $declarationYear = null): array
     {
         // this seems redundant, but it is necessary to set the office code
